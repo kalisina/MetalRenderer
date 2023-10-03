@@ -36,7 +36,7 @@ vertex VertexOut vertex_main(uint vertexId [[vertex_id]]) { //vertex_id -> which
     return out;
 }
 
-fragment float4 fragment_main(VertexOut in [[stage_in]]) { //[[stage_in]] allows to pass parameter
+fragment float4 fragment_main(VertexOut in [[stage_in]]) { //[[stage_in]] allows to pass the vertex as parameter
     return float4(in.color, 1); // rgba
 }
 
