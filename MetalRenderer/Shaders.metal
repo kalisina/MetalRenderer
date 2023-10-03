@@ -27,6 +27,7 @@ struct VertexOut {
 
 vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
                              device const float3 *colorBuffer [[buffer(1)]],
+                             constant float &timer [[buffer(2)]],
                              uint vertexId [[vertex_id]]) { //vertex_id -> which vertex is currently processing
 
     VertexOut out {
@@ -34,6 +35,7 @@ vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
         .point_size = 60.0,
         .color = colorBuffer[vertexId]
     };
+    out.position.x += timer;
     return out;
 }
 

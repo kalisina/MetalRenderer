@@ -35,6 +35,8 @@ class Renderer: NSObject {
     let positionBuffer: MTLBuffer
     let colorBuffer: MTLBuffer
     
+    var timer: Float = 0
+    
     init(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
               let commandQueue = device.makeCommandQueue() else {
@@ -83,6 +85,11 @@ extension Renderer: MTKViewDelegate {
               let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: descriptor) else {
             return
         }
+        
+        timer += 0.05
+        var currentTime = sin(timer)
+        
+        commandEncoder.setVertexBytes(&currentTime, length: MemoryLayout<Float>.stride, index: 2)
         
         commandEncoder.setRenderPipelineState(pipelineState)
         
