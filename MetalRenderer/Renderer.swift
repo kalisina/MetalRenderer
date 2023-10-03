@@ -14,6 +14,27 @@ class Renderer: NSObject {
     static var library: MTLLibrary! // needs to be initialized only once
     let pipelineState: MTLRenderPipelineState // needs to be initialized only once
     
+    var positionArray: [SIMD4<Float>] = [
+        simd_float4(-0.5, -0.2, 0, 1),
+        simd_float4(0.2, -0.2, 0, 1),
+        simd_float4(0, 0.5, 0, 1),
+        simd_float4(0, 0.5, 0, 1),
+        simd_float4(0.2, -0.2, 0, 1),
+        simd_float4(0.7, 0.7, 0, 1)
+    ]
+    
+    var colorArray: [SIMD3<Float>] = [
+        simd_float3(1,0,0),
+        simd_float3(0,1,0),
+        simd_float3(0,0,1),
+        simd_float3(0,0,1),
+        simd_float3(0,1,0),
+        simd_float3(1,0,1)
+    ]
+    
+    let positionBuffer: MTLBuffer
+    let colorBuffer: MTLBuffer
+    
     init(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
               let commandQueue = device.makeCommandQueue() else {
@@ -24,6 +45,13 @@ class Renderer: NSObject {
         self.commandQueue = commandQueue
         Renderer.library = device.makeDefaultLibrary()!
         self.pipelineState = Renderer.createPipelineState()
+        
+        let positionLength = MemoryLayout<SIMD4<Float>>.stride * positionArray.count
+        let colorLength = MemoryLayout<SIMD3<Float>>.stride * colorArray.count
+        
+        self.positionBuffer = device.makeBuffer(bytes: positionArray, length: positionLength)!
+        self.colorBuffer = device.makeBuffer(bytes: colorArray, length: colorLength)!
+        
         super.init()
     }
     
@@ -57,6 +85,10 @@ extension Renderer: MTKViewDelegate {
         }
         
         commandEncoder.setRenderPipelineState(pipelineState)
+        
+        commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
+        
         // draw call
         commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
         commandEncoder.endEncoding()
