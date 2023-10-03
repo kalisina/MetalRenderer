@@ -58,7 +58,7 @@ extension Renderer: MTKViewDelegate {
         
         commandEncoder.setRenderPipelineState(pipelineState)
         // draw call
-        commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
+        commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
         commandEncoder.endEncoding()
         
         commandBuffer.present(drawable)

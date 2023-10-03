@@ -8,16 +8,22 @@
 #include <metal_stdlib>
 using namespace metal;
 
-constant float4 position[3] = { // array of positions of each vertices
+constant float4 position[6] = { // array of positions of each vertices
     float4(-0.5, -0.2, 0, 1),
     float4(0.2, -0.2, 0, 1),
-    float4(0, 0.5, 0, 1)
+    float4(0, 0.5, 0, 1),
+    float4(0, 0.5, 0, 1),
+    float4(0.2, -0.2, 0, 1),
+    float4(0.7, 0.7, 0, 1)
 };
 
-constant float3 color[3] = { // array of colors of each vertices
+constant float3 color[6] = { // array of colors of each vertices
     float3(1,0,0),
     float3(0,1,0),
-    float3(0,0,1)
+    float3(0,0,1),
+    float3(0,0,1),
+    float3(0,1,0),
+    float3(1,0,1)
 };
 
 struct VertexOut {
@@ -29,7 +35,7 @@ struct VertexOut {
 vertex VertexOut vertex_main(uint vertexId [[vertex_id]]) { //vertex_id -> which vertex is currently processing
 
     VertexOut out {
-        .position = position[vertexId], //x,y,z,w centre of the screen
+        .position = position[vertexId], 
         .point_size = 60.0,
         .color = color[vertexId]
     };
