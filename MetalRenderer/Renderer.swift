@@ -14,12 +14,13 @@ class Renderer: NSObject {
     static var library: MTLLibrary! // needs to be initialized only once
     let pipelineState: MTLRenderPipelineState // needs to be initialized only once
     
+    //winding order is anti-clockwise (BP externe)
     var positionArray: [SIMD4<Float>] = [
         simd_float4(-0.5, -0.2, 0, 1),
         simd_float4(0.2, -0.2, 0, 1),
         simd_float4(0, 0.5, 0, 1),
-        simd_float4(0, 0.5, 0, 1),
-        simd_float4(0.2, -0.2, 0, 1),
+        //simd_float4(0, 0.5, 0, 1), // remove duplicate values and use indexArray instead
+        //simd_float4(0.2, -0.2, 0, 1), // remove duplicate values and use indexArray instead
         simd_float4(0.7, 0.7, 0, 1)
     ]
     
@@ -27,13 +28,19 @@ class Renderer: NSObject {
         simd_float3(1,0,0),
         simd_float3(0,1,0),
         simd_float3(0,0,1),
-        simd_float3(0,0,1),
-        simd_float3(0,1,0),
+        //simd_float3(0,0,1), // remove duplicate values and use indexArray instead
+        //simd_float3(0,1,0), // remove duplicate values and use indexArray instead
         simd_float3(1,0,1)
+    ]
+    
+    let indexArray: [uint16] = [
+        0, 1, 2,
+        2, 1, 3
     ]
     
     let positionBuffer: MTLBuffer
     let colorBuffer: MTLBuffer
+    let indexBuffer: MTLBuffer
     
     var timer: Float = 0
     
@@ -50,9 +57,11 @@ class Renderer: NSObject {
         
         let positionLength = MemoryLayout<SIMD4<Float>>.stride * positionArray.count
         let colorLength = MemoryLayout<SIMD3<Float>>.stride * colorArray.count
+        let indexLength = MemoryLayout<UInt16>.stride * indexArray.count
         
         self.positionBuffer = device.makeBuffer(bytes: positionArray, length: positionLength)!
         self.colorBuffer = device.makeBuffer(bytes: colorArray, length: colorLength)!
+        self.indexBuffer = device.makeBuffer(bytes: indexArray, length: indexLength)!
         
         super.init()
     }
@@ -86,11 +95,6 @@ extension Renderer: MTKViewDelegate {
             return
         }
         
-        timer += 0.05
-        var currentTime = sin(timer)
-        
-        commandEncoder.setVertexBytes(&currentTime, length: MemoryLayout<Float>.stride, index: 2)
-        
         commandEncoder.setRenderPipelineState(pipelineState)
         
         commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
@@ -98,6 +102,7 @@ extension Renderer: MTKViewDelegate {
         
         // draw call
         commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        commandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indexArray.count, indexType: .uint16, indexBuffer: indexBuffer, indexBufferOffset: 0)
         commandEncoder.endEncoding()
         
         commandBuffer.present(drawable)
