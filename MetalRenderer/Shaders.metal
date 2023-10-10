@@ -19,20 +19,27 @@ constant float3 color[6] = { // array of colors of each vertices
 };
  */
 
+struct VertexIn {
+    float4 position [[attribute(0)]]; //the vertex descriptor allows us to use a float4 instead of float3
+    float3 color [[attribute(1)]];
+};
+
 struct VertexOut {
     float4 position [[position]];
     float point_size [[point_size]];
     float3 color;
 };
-
+/*
 vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
                              device const float3 *colorBuffer [[buffer(1)]],
+                             constant float &timer [[buffer(2)]],
                              uint vertexId [[vertex_id]]) { //vertex_id -> which vertex is currently processing
+*/
+vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
 
     VertexOut out {
-        .position = positionBuffer[vertexId],
-        .point_size = 60.0,
-        .color = colorBuffer[vertexId]
+        .position = vertexBuffer.position,
+        .color = vertexBuffer.color
     };
     return out;
 }

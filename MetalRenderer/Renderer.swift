@@ -8,29 +8,22 @@
 import Foundation
 import MetalKit
 
+struct Vertex {
+    let position: SIMD3<Float>
+    let color: SIMD3<Float>
+}
+
 class Renderer: NSObject {
     static var device: MTLDevice! // needs to be initialized only once
     let commandQueue: MTLCommandQueue // needs to be initialized only once
     static var library: MTLLibrary! // needs to be initialized only once
     let pipelineState: MTLRenderPipelineState // needs to be initialized only once
     
-    //winding order is anti-clockwise (BP externe)
-    var positionArray: [SIMD4<Float>] = [
-        simd_float4(-0.5, -0.2, 0, 1),
-        simd_float4(0.2, -0.2, 0, 1),
-        simd_float4(0, 0.5, 0, 1),
-        //simd_float4(0, 0.5, 0, 1), // remove duplicate values and use indexArray instead
-        //simd_float4(0.2, -0.2, 0, 1), // remove duplicate values and use indexArray instead
-        simd_float4(0.7, 0.7, 0, 1)
-    ]
-    
-    var colorArray: [SIMD3<Float>] = [
-        simd_float3(1,0,0),
-        simd_float3(0,1,0),
-        simd_float3(0,0,1),
-        //simd_float3(0,0,1), // remove duplicate values and use indexArray instead
-        //simd_float3(0,1,0), // remove duplicate values and use indexArray instead
-        simd_float3(1,0,1)
+    let vertices: [Vertex] = [
+      Vertex(position:  SIMD3<Float>(-0.5, -0.2, 0), color:  SIMD3<Float>(1, 0, 0)),
+      Vertex(position:  SIMD3<Float>(0.2, -0.2, 0), color:  SIMD3<Float>(0, 1, 0)),
+      Vertex(position:  SIMD3<Float>(0, 0.5, 0), color:  SIMD3<Float>(0, 0, 1)),
+      Vertex(position:  SIMD3<Float>(0.7, 0.7, 0), color:  SIMD3<Float>(1, 0, 1))
     ]
     
     let indexArray: [uint16] = [
@@ -38,8 +31,7 @@ class Renderer: NSObject {
         2, 1, 3
     ]
     
-    let positionBuffer: MTLBuffer
-    let colorBuffer: MTLBuffer
+    let vertexBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
     
     var timer: Float = 0
@@ -55,12 +47,10 @@ class Renderer: NSObject {
         Renderer.library = device.makeDefaultLibrary()!
         self.pipelineState = Renderer.createPipelineState()
         
-        let positionLength = MemoryLayout<SIMD4<Float>>.stride * positionArray.count
-        let colorLength = MemoryLayout<SIMD3<Float>>.stride * colorArray.count
-        let indexLength = MemoryLayout<UInt16>.stride * indexArray.count
+        let vertexLength = MemoryLayout<Vertex>.stride * vertices.count
+        self.vertexBuffer = device.makeBuffer(bytes: vertices, length: vertexLength)!
         
-        self.positionBuffer = device.makeBuffer(bytes: positionArray, length: positionLength)!
-        self.colorBuffer = device.makeBuffer(bytes: colorArray, length: colorLength)!
+        let indexLength = MemoryLayout<UInt16>.stride * indexArray.count
         self.indexBuffer = device.makeBuffer(bytes: indexArray, length: indexLength)!
         
         super.init()
@@ -75,6 +65,7 @@ class Renderer: NSObject {
         let fragmentFunction = Renderer.library.makeFunction(name: "fragment_main")
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = fragmentFunction
+        pipelineStateDescriptor.vertexDescriptor = MTLVertexDescriptor.defaultVertexDescriptor()
         
         return try! Renderer.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
@@ -95,13 +86,17 @@ extension Renderer: MTKViewDelegate {
             return
         }
         
+        timer += 0.5
+        //var currentTime: Float = sin(timer)
+        //commandEncoder.setVertexBytes(&currentTime, length: MemoryLayout<Float>.stride, index: 2)
         commandEncoder.setRenderPipelineState(pipelineState)
         
-        commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
-        commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
+        //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
+        //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
+        commandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         
         // draw call
-        commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+        //commandEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
         commandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indexArray.count, indexType: .uint16, indexBuffer: indexBuffer, indexBufferOffset: 0)
         commandEncoder.endEncoding()
         
