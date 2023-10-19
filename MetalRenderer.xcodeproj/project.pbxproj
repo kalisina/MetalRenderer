@@ -14,6 +14,9 @@
 		0418A3D42ACAD4A800D3F9EC /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0418A3D32ACAD4A800D3F9EC /* Renderer.swift */; };
 		041EF47F2ACC2AAC001A5DFA /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 041EF47E2ACC2AAC001A5DFA /* Shaders.metal */; };
 		045052672AD565CA00304D3E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045052662AD565CA00304D3E /* Extensions.swift */; };
+		04A951F22AE1529C00220C92 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A951F12AE1529C00220C92 /* Model.swift */; };
+		04A951F52AE163CE00220C92 /* train.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 04A951F32AE163CD00220C92 /* train.mtl */; };
+		04A951F62AE163CE00220C92 /* train.obj in Resources */ = {isa = PBXBuildFile; fileRef = 04A951F42AE163CE00220C92 /* train.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		0418A3D32ACAD4A800D3F9EC /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		041EF47E2ACC2AAC001A5DFA /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		045052662AD565CA00304D3E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		04A951F12AE1529C00220C92 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		04A951F32AE163CD00220C92 /* train.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = train.mtl; sourceTree = "<group>"; };
+		04A951F42AE163CE00220C92 /* train.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = train.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,13 +67,24 @@
 				0418A3C42ACAD31A00D3F9EC /* AppDelegate.swift */,
 				0418A3C62ACAD31A00D3F9EC /* ViewController.swift */,
 				0418A3D32ACAD4A800D3F9EC /* Renderer.swift */,
+				04A951F12AE1529C00220C92 /* Model.swift */,
 				041EF47E2ACC2AAC001A5DFA /* Shaders.metal */,
 				045052662AD565CA00304D3E /* Extensions.swift */,
+				04A951F72AE163F100220C92 /* Models */,
 				0418A3C82ACAD31C00D3F9EC /* Assets.xcassets */,
 				0418A3CA2ACAD31C00D3F9EC /* Main.storyboard */,
 				0418A3CD2ACAD31C00D3F9EC /* MetalRenderer.entitlements */,
 			);
 			path = MetalRenderer;
+			sourceTree = "<group>";
+		};
+		04A951F72AE163F100220C92 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				04A951F32AE163CD00220C92 /* train.mtl */,
+				04A951F42AE163CE00220C92 /* train.obj */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,8 +145,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04A951F62AE163CE00220C92 /* train.obj in Resources */,
 				0418A3C92ACAD31C00D3F9EC /* Assets.xcassets in Resources */,
 				0418A3CC2ACAD31C00D3F9EC /* Main.storyboard in Resources */,
+				04A951F52AE163CE00220C92 /* train.mtl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +162,7 @@
 				045052672AD565CA00304D3E /* Extensions.swift in Sources */,
 				041EF47F2ACC2AAC001A5DFA /* Shaders.metal in Sources */,
 				0418A3C72ACAD31A00D3F9EC /* ViewController.swift in Sources */,
+				04A951F22AE1529C00220C92 /* Model.swift in Sources */,
 				0418A3D42ACAD4A800D3F9EC /* Renderer.swift in Sources */,
 				0418A3C52ACAD31A00D3F9EC /* AppDelegate.swift in Sources */,
 			);
@@ -281,6 +301,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MetalRenderer/MetalRenderer.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -308,6 +329,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MetalRenderer/MetalRenderer.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

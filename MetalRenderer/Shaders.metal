@@ -21,7 +21,7 @@ constant float3 color[6] = { // array of colors of each vertices
 
 struct VertexIn {
     float4 position [[attribute(0)]]; //the vertex descriptor allows us to use a float4 instead of float3
-    float3 color [[attribute(1)]];
+    //float3 color [[attribute(1)]]; not needed when importing model with Model IO
 };
 
 struct VertexOut {
@@ -39,8 +39,9 @@ vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]]) { //using the s
 
     VertexOut out {
         .position = vertexBuffer.position,
-        .color = vertexBuffer.color
+        .color = float3(0, 0 , 1) // blue now, later we will read the color from the material file 
     };
+    out.position.y -= 0.5;
     return out;
 }
 
