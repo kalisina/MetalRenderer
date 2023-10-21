@@ -8,7 +8,7 @@
 #include <metal_stdlib>
 using namespace metal;
 
-/*
+
 constant float3 color[6] = { // array of colors of each vertices
     float3(1,0,0),
     float3(0,1,0),
@@ -17,7 +17,7 @@ constant float3 color[6] = { // array of colors of each vertices
     float3(0,1,0),
     float3(1,0,1)
 };
- */
+
 
 struct VertexIn {
     float4 position [[attribute(0)]]; //the vertex descriptor allows us to use a float4 instead of float3
@@ -35,11 +35,12 @@ vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
                              constant float &timer [[buffer(2)]],
                              uint vertexId [[vertex_id]]) { //vertex_id -> which vertex is currently processing
 */
-vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
+vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]], constant uint &colorIndex [[buffer(11)]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
 
     VertexOut out {
         .position = vertexBuffer.position,
-        .color = float3(0, 0 , 1) // blue now, later we will read the color from the material file 
+        .color = color[colorIndex]
+        //.color = float3(0, 0 , 1) // blue now, later we will read the color from the material file
     };
     out.position.y -= 0.5;
     return out;

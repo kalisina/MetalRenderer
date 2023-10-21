@@ -101,13 +101,20 @@ extension Renderer: MTKViewDelegate {
         //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
         
+        var color: Int = 0
+
         for mtkMesh in train.mtkMeshes {
             for vertexBuffer in mtkMesh.vertexBuffers {
                 commandEncoder.setVertexBuffer(vertexBuffer.buffer, offset: 0, index: 0)
                 
                 for submesh in mtkMesh.submeshes {
+
+                    commandEncoder.setVertexBytes(&color, length: MemoryLayout<Int>.stride, index: 11) // we can use setVertexBytes because the data is less than 4kb, otherwise, we would need to use a buffer
+
                     // draw call
                     commandEncoder.drawIndexedPrimitives(type: .triangle, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset)
+
+                    color += 1
                 }
                 
             }
