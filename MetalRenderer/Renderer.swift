@@ -101,6 +101,9 @@ extension Renderer: MTKViewDelegate {
         //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
         
+        var modelMatrix = train.transform.matrix
+        commandEncoder.setVertexBytes(&modelMatrix, length: MemoryLayout<float4x4>.stride, index: 21) //using high index number to keep it separate from the other indices we've used
+        
         var color: Int = 0
 
         for mtkMesh in train.mtkMeshes {
