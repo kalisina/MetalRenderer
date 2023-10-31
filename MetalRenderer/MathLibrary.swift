@@ -114,7 +114,7 @@ extension float4x4 {
   }
   
   // MARK: - Left handed projection matrix
-  init(projectionFov fov: Float, near: Float, far: Float, aspect: Float) {
+  init(projectionFov fov: Float, near: Float, far: Float, aspect: Float) { // aspect is screen aspect ration
     let y = 1 / tan(fov * 0.5)
     let x = y / aspect
     let z = far / (far - near)
