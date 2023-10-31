@@ -35,10 +35,13 @@ vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
                              constant float &timer [[buffer(2)]],
                              uint vertexId [[vertex_id]]) { //vertex_id -> which vertex is currently processing
 */
-vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]], constant uint &colorIndex [[buffer(11)]], constant float4x4 &modelMaxtrix[[buffer(21)]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
+vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]],
+                             constant uint &colorIndex [[buffer(11)]], 
+                             constant float4x4 &modelMaxtrix[[buffer(21)]],
+                             constant float4x4 &viewMatrix[[buffer(22)]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
 
     VertexOut out {
-        .position = modelMaxtrix * vertexBuffer.position,
+        .position = viewMatrix * modelMaxtrix * vertexBuffer.position,
         .color = color[colorIndex]
         //.color = float3(0, 0 , 1) // blue now, later we will read the color from the material file
     };

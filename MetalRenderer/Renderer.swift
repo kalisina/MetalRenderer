@@ -109,6 +109,13 @@ extension Renderer: MTKViewDelegate {
         //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
         
+        
+        var viewTransform = Transform()
+        viewTransform.position.y = 1.0;
+        
+        var viewMatrix = viewTransform.matrix.inverse
+        commandEncoder.setVertexBytes(&viewMatrix, length: MemoryLayout<float4x4>.stride, index: 22)
+        
         let models = [tree, train]
         
         for model in models {
