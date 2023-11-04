@@ -39,6 +39,7 @@ class Renderer: NSObject {
     
     let train: Model
     let tree: Model
+    let camera = Camera()
     
     var timer: Float = 0
     
@@ -71,6 +72,8 @@ class Renderer: NSObject {
         tree = Model(name: "treefir")
         tree.transform.position = [-1.0, 0.0, 0.5]
         tree.transform.scale = 0.5
+        
+        camera.transform.position = [0, 0.5, -3]
         
         super.init()
     }
