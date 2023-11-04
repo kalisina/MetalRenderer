@@ -106,7 +106,7 @@ class Renderer: NSObject {
 extension Renderer: MTKViewDelegate {
     // called when window is resized or if phone is rotating
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        
+        camera.aspect = Float(view.bounds.width / view.bounds.height)
     }
     
     // called every frame
