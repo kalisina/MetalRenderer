@@ -8,6 +8,7 @@
 #include <metal_stdlib>
 using namespace metal;
 
+#import "Common.h"
 
 constant float3 color[6] = { // array of colors of each vertices
     float3(1,0,0),
@@ -37,11 +38,10 @@ vertex VertexOut vertex_main(device const float4 *positionBuffer [[buffer(0)]],
 */
 vertex VertexOut vertex_main(VertexIn vertexBuffer [[stage_in]],
                              constant uint &colorIndex [[buffer(11)]], 
-                             constant float4x4 &modelMaxtrix[[buffer(21)]],
-                             constant float4x4 &viewMatrix[[buffer(22)]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
+                             constant Uniforms &uniforms[[buffer(21)]]) { //using the stage_in, all necessary information comes from the VertexDescriptor
 
     VertexOut out {
-        .position = viewMatrix * modelMaxtrix * vertexBuffer.position,
+        .position = uniforms.projectionMatrix * uniforms.viewMatrix * uniforms.modelMatrix * vertexBuffer.position,
         .color = color[colorIndex]
         //.color = float3(0, 0 , 1) // blue now, later we will read the color from the material file
     };

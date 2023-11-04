@@ -127,6 +127,9 @@ extension Renderer: MTKViewDelegate {
         //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
         
+        uniforms.viewMatrix = camera.viewMatix
+        uniforms.projectionMatrix = camera.projectionMaxtrix
+        /*
         let projectionMatrix = float4x4(projectionFov: radians(fromDegrees: 65), near: 0.1, far: 100, aspect: Float(view.bounds.width / view.bounds.height))
         
         var viewTransform = Transform()
@@ -135,13 +138,14 @@ extension Renderer: MTKViewDelegate {
         
         var viewMatrix = projectionMatrix * viewTransform.matrix.inverse
         commandEncoder.setVertexBytes(&viewMatrix, length: MemoryLayout<float4x4>.stride, index: 22)
+         */
         
         let models = [tree, train]
         
         for model in models {
             
-            var modelMatrix = model.transform.matrix
-            commandEncoder.setVertexBytes(&modelMatrix, length: MemoryLayout<float4x4>.stride, index: 21) //using high index number to keep it separate from the other indices we've used
+            uniforms.modelMatrix = model.transform.matrix
+            commandEncoder.setVertexBytes(&uniforms, length: MemoryLayout<Uniforms>.stride, index: 21) //using high index number to keep it separate from the other indices we've used
             
             var color: Int = 0
             
