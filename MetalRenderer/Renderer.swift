@@ -41,6 +41,8 @@ class Renderer: NSObject {
     let tree: Model
     let camera = Camera()
     
+    var uniforms = Uniforms()
+    
     var timer: Float = 0
     
     init(view: MTKView) {
