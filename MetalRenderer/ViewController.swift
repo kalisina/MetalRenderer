@@ -28,6 +28,10 @@ class ViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
+    
+    override func scrollWheel(with event: NSEvent) {
+        renderer?.zoom(delta: Float(event.deltaY))
+    }
 
 
 }
