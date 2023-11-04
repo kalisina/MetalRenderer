@@ -18,6 +18,7 @@ class Renderer: NSObject {
     let commandQueue: MTLCommandQueue // needs to be initialized only once
     static var library: MTLLibrary! // needs to be initialized only once
     let pipelineState: MTLRenderPipelineState // needs to be initialized only once
+    let depthStencilState: MTLDepthStencilState
     
     /*
     let vertices: [Vertex] = [
@@ -51,6 +52,9 @@ class Renderer: NSObject {
         self.commandQueue = commandQueue
         Renderer.library = device.makeDefaultLibrary()!
         self.pipelineState = Renderer.createPipelineState()
+        self.depthStencilState = Renderer.createDepthState()
+        
+        view.depthStencilPixelFormat = .depth32Float // necessary to create the texture (depth) on the metal view
         /*
         let vertexLength = MemoryLayout<Vertex>.stride * vertices.count
         self.vertexBuffer = device.makeBuffer(bytes: vertices, length: vertexLength)!
@@ -65,10 +69,17 @@ class Renderer: NSObject {
         train.transform.scale = 0.5
         
         tree = Model(name: "treefir")
-        tree.transform.position = [-1.0, 0.0, 1.0]
+        tree.transform.position = [-1.0, 0.0, 0.5]
         tree.transform.scale = 0.5
         
         super.init()
+    }
+    
+    static func createDepthState() -> MTLDepthStencilState {
+        let depthDescriptor = MTLDepthStencilDescriptor()
+        depthDescriptor.depthCompareFunction = .less // pixels closer to the camera with the smaller depth will be visible
+        depthDescriptor.isDepthWriteEnabled = true // allow writting new values to the depth texture
+        return Renderer.device.makeDepthStencilState(descriptor: depthDescriptor)!
     }
     
     static func createPipelineState() -> MTLRenderPipelineState {
@@ -81,6 +92,7 @@ class Renderer: NSObject {
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = fragmentFunction
         pipelineStateDescriptor.vertexDescriptor = MTLVertexDescriptor.defaultVertexDescriptor()
+        pipelineStateDescriptor.depthAttachmentPixelFormat = .depth32Float // must use the same pixel format as the depthStencilPixelFormat of the Metal View
         
         return try! Renderer.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
@@ -105,6 +117,7 @@ extension Renderer: MTKViewDelegate {
         //var currentTime: Float = sin(timer)
         //commandEncoder.setVertexBytes(&currentTime, length: MemoryLayout<Float>.stride, index: 2)
         commandEncoder.setRenderPipelineState(pipelineState)
+        commandEncoder.setDepthStencilState(depthStencilState)
         
         //commandEncoder.setVertexBuffer(positionBuffer, offset: 0, index: 0)
         //commandEncoder.setVertexBuffer(colorBuffer, offset: 0, index: 1)
